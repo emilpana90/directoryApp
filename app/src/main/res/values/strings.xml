@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Directory App</string>
+    <string name="people_title">People list</string>
+    <string name="room_title">Rooms list</string>
 </resources>

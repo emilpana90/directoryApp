@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/peopleFragment">
+
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="com.emilpana.directoryapp.ui.fragment.PeopleFragment"
+        android:label="@string/people_title"
+        tools:layout="@layout/fragment_people" />
+    <fragment
+        android:id="@+id/roomsFragment"
+        android:name="com.emilpana.directoryapp.ui.fragment.RoomsFragment"
+        android:label="@string/room_title"
+        tools:layout="@layout/fragment_rooms" />
+</navigation>

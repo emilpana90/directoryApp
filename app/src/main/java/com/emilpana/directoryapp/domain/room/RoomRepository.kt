@@ -4,7 +4,7 @@
  */
 package com.emilpana.directoryapp.domain.room
 
-import com.emilpana.directoryapp.domain.entity.Room
+import com.emilpana.directoryapp.domain.entity.model.Room
 import io.reactivex.rxjava3.core.Single
 
 interface RoomRepository {

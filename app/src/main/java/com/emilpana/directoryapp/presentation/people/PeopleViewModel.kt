@@ -8,7 +8,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
-import com.emilpana.directoryapp.domain.entity.Person
+import com.emilpana.directoryapp.domain.entity.model.Person
+import com.emilpana.directoryapp.domain.entity.model.PersonsListContainer
 import com.emilpana.directoryapp.domain.people.PeopleRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -16,7 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class PeopleViewModel @ViewModelInject constructor(private val peopleRepository: PeopleRepository) :
     ViewModel() {
-    val peopleList: LiveData<List<Person>> by lazy {
+    val peopleList: LiveData<PersonsListContainer> by lazy {
         val flowable = Flowable
             .fromSingle(peopleRepository.getAllPeople())
             .subscribeOn(Schedulers.io())

@@ -4,9 +4,9 @@
  */
 package com.emilpana.directoryapp.domain.people
 
-import com.emilpana.directoryapp.domain.entity.Person
+import com.emilpana.directoryapp.domain.entity.model.PersonsListContainer
 import io.reactivex.rxjava3.core.Single
 
 interface PeopleRepository {
-    fun getAllPeople(): Single<List<Person>>
+    fun getAllPeople(): Single<PersonsListContainer>
 }

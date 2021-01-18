@@ -88,4 +88,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_compiler_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_compiler_version"
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 }

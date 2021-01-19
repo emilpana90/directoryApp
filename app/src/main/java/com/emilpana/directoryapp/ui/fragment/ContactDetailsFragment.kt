@@ -65,16 +65,18 @@ class ContactDetailsFragment : Fragment() {
                         getString(R.string.person_name, person.firstName, person.lastName)
 
                     // Setting the person's favorite color
-                    personData.favouriteColor?.let {
+                    personData.favouriteColor?.let { color ->
                         // Reduce the intensity of the color before setting as background
-                        binding.colorBar.setBackgroundColor(
-                            Color.parseColor(
-                                it.replace(
-                                    "#",
-                                    "#C0"
+                        arrayOf(binding.colorBar, binding.colorBar2).forEach {
+                            it.setBackgroundColor(
+                                Color.parseColor(
+                                    color.replace(
+                                        "#",
+                                        "#C0"
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
 
                     binding.jobTitle.text = person.jobTitle

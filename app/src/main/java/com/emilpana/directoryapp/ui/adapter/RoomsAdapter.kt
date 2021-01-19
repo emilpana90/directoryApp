@@ -5,6 +5,7 @@
 package com.emilpana.directoryapp.ui.adapter
 
 import android.content.Context
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +20,13 @@ class RoomsAdapter @Inject constructor(@ActivityContext val context: Context) :
     RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView
+        val maxOccupancy: TextView
+        val availability: TextView
 
         init {
-            // View references
             nameTextView = view.findViewById(R.id.name)
+            maxOccupancy = view.findViewById(R.id.maxOccupancy)
+            availability = view.findViewById(R.id.availability)
         }
     }
 
@@ -44,6 +48,25 @@ class RoomsAdapter @Inject constructor(@ActivityContext val context: Context) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val roomData = roomsList[position]
         holder.nameTextView.text = roomData.name
+        holder.maxOccupancy.text =
+            Html.fromHtml(context.getString(R.string.max_occcupancy, roomData.maxOccupancy))
+        holder.availability.text = context.getString(
+            if (roomData.isOccupied) {
+                R.string.busy
+            } else {
+                R.string.available
+            }
+        )
+        holder.availability.setCompoundDrawablesWithIntrinsicBounds(
+            0,
+            0,
+            if (roomData.isOccupied) {
+                R.drawable.ic_event_busy
+            } else {
+                R.drawable.ic_event_available
+            },
+            0
+        )
     }
 
     override fun getItemCount(): Int {

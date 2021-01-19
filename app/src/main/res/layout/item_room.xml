@@ -9,10 +9,44 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        style="@style/HeaderTextStyle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:ellipsize="end"
+        android:maxLines="2"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Room no.1" />
+        tools:text="Room name" />
+
+    <TextView
+        android:id="@+id/maxOccupancy"
+        style="@style/CategoryTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@id/name"
+        app:layout_constraintRight_toRightOf="@id/name"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        tools:text="@string/max_occcupancy" />
+
+    <TextView
+        android:id="@+id/availability"
+        style="@style/CategoryTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:drawableRight="@drawable/ic_event_available"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/red"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Available" />
 </androidx.constraintlayout.widget.ConstraintLayout>

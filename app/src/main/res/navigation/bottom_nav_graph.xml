@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/contactDetailsFragment"
         android:name="com.emilpana.directoryapp.ui.fragment.ContactDetailsFragment"
-        android:label="{personName}"
+        android:label="@string/contact_details"
         tools:layout="@layout/fragment_contact_details">
         <argument
             android:name="personId"

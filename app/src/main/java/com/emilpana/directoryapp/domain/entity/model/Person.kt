@@ -4,7 +4,12 @@
  */
 package com.emilpana.directoryapp.domain.entity.model
 
-data class PersonsListContainer(val peopleList: List<Person>?, val error: Throwable? = null)
+data class PersonsListContainer(
+    val peopleList: List<Person>?,
+    val error: Throwable? = null,
+    val isDataOld: Boolean
+)
+
 data class Person(
     val avatar: String,
     val createdAt: String,

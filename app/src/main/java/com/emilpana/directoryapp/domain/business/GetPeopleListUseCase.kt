@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class GetPeopleListUseCase @Inject constructor(val peopleRepository: PeopleRepository) {
     fun execute(): Single<PersonsListContainer> {
-        return peopleRepository.getRemotePeople().map { PersonsListContainer(it) }.doOnSuccess {
+        return peopleRepository.getRemotePeople()
+            .map { PersonsListContainer(it, isDataOld = false) }.doOnSuccess {
             // Save to db
             it.peopleList?.let {
                 peopleRepository.replaceLocalPeople(it)
@@ -32,16 +33,17 @@ class GetPeopleListUseCase @Inject constructor(val peopleRepository: PeopleRepos
                             PersonsListContainer(
                                 peopleList,
                                 // Rethrow error if cached list is empty
-                                if (peopleList.isEmpty()) error else null
+                                if (peopleList.isEmpty()) error else null,
+                                isDataOld = true
                             )
                         }
                         // Trigger a container for error, else the error will not be catched by
                         // livedata reactive streams
-                        .onErrorResumeNext { Single.just(PersonsListContainer(null, error)) }
+                        .onErrorResumeNext { Single.just(PersonsListContainer(null, error, false)) }
                 }
                 // Trigger a container for error, else the error will not be catched by livedata
                 // reactive streams
-                else -> Single.just(PersonsListContainer(null, error))
+                else -> Single.just(PersonsListContainer(null, error, false))
             }
         }
     }

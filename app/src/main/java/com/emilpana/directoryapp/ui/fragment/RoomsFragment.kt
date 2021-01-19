@@ -78,9 +78,11 @@ class RoomsFragment : Fragment() {
         binding.recyclerView.isVisible = true
 
         val viewModel: RoomsViewModel by viewModels()
-        viewModel.roomList.observe(viewLifecycleOwner, Observer { (roomList, error) ->
+        viewModel.roomList.observe(viewLifecycleOwner, Observer { (roomList, error, isDataOld) ->
             binding.progressBar.isVisible = false
             binding.swipeRefresh.isRefreshing = false
+            binding.oldDataBanner.root.isVisible = isDataOld
+
             if (error == null) {
                 // Hide the error & show recycler view
                 binding.contentPlaceholder.root.isVisible = false

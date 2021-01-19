@@ -81,9 +81,11 @@ class PeopleFragment : Fragment() {
         binding.recyclerView.isVisible = true
 
         val viewModel: PeopleViewModel by viewModels()
-        viewModel.peopleList.observe(viewLifecycleOwner, Observer { (personsList, error) ->
+        viewModel.peopleList.observe(viewLifecycleOwner, Observer { (personsList, error, isDataOld) ->
             binding.progressBar.isVisible = false
             binding.swipeRefresh.isRefreshing = false
+            binding.oldDataBanner.root.isVisible = isDataOld
+
             if (error == null) {
                 // Hide the error
                 binding.contentPlaceholder.root.isVisible = false

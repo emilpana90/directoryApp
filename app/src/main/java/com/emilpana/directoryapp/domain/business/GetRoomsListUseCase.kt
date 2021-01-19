@@ -13,14 +13,15 @@ import javax.inject.Inject
 
 class GetRoomsListUseCase @Inject constructor(private val roomRepository: RoomRepository) {
     fun execute(): Single<RoomListContainer> {
-        return roomRepository.getRemoteRooms().map { RoomListContainer(it) }.doOnSuccess {
-            // Save to db
-            it.roomList?.let {
-                roomRepository.replaceLocalRooms(it)
-            }
+        return roomRepository.getRemoteRooms().map { RoomListContainer(it, isDataOld = false) }
+            .doOnSuccess {
+                // Save to db
+                it.roomList?.let {
+                    roomRepository.replaceLocalRooms(it)
+                }
 
-            Log.d(GetRoomsListUseCase::class.simpleName, "rooms list loaded")
-        }.onErrorResumeNext { error ->
+                Log.d(GetRoomsListUseCase::class.simpleName, "rooms list loaded")
+            }.onErrorResumeNext { error ->
             Log.d(GetRoomsListUseCase::class.simpleName, "rooms list load failed")
             when (error) {
                 // If no internet, get from local database
@@ -31,16 +32,17 @@ class GetRoomsListUseCase @Inject constructor(private val roomRepository: RoomRe
                             RoomListContainer(
                                 roomsList,
                                 // Rethrow error if cached list is empty
-                                if (roomsList.isEmpty()) error else null
+                                if (roomsList.isEmpty()) error else null,
+                                isDataOld = true
                             )
                         }
                         // Trigger a container in case of error, else the error will not be catched by
                         // livedata reactive streams
-                        .onErrorResumeNext { Single.just(RoomListContainer(null, error)) }
+                        .onErrorResumeNext { Single.just(RoomListContainer(null, error, false)) }
                 }
                 // Trigger a container in case of error, else the error will not be catched by livedata
                 // reactive streams
-                else -> Single.just(RoomListContainer(null, error))
+                else -> Single.just(RoomListContainer(null, error, false))
             }
         }
     }

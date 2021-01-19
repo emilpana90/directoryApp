@@ -9,10 +9,26 @@
         android:id="@+id/peopleFragment"
         android:name="com.emilpana.directoryapp.ui.fragment.PeopleFragment"
         android:label="@string/people_title"
-        tools:layout="@layout/fragment_people" />
+        tools:layout="@layout/fragment_people">
+        <action
+            android:id="@+id/action_peopleFragment_to_contactDetailsFragment"
+            app:destination="@id/contactDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/roomsFragment"
         android:name="com.emilpana.directoryapp.ui.fragment.RoomsFragment"
         android:label="@string/room_title"
         tools:layout="@layout/fragment_rooms" />
+    <fragment
+        android:id="@+id/contactDetailsFragment"
+        android:name="com.emilpana.directoryapp.ui.fragment.ContactDetailsFragment"
+        android:label="{personName}"
+        tools:layout="@layout/fragment_contact_details">
+        <argument
+            android:name="personId"
+            app:argType="string" />
+        <argument
+            android:name="personName"
+            app:argType="string" />
+    </fragment>
 </navigation>

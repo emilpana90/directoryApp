@@ -22,28 +22,44 @@ class GetRoomsListUseCase @Inject constructor(private val roomRepository: RoomRe
 
                 Log.d(GetRoomsListUseCase::class.simpleName, "rooms list loaded")
             }.onErrorResumeNext { error ->
-            Log.d(GetRoomsListUseCase::class.simpleName, "rooms list load failed")
-            when (error) {
-                // If no internet, get from local database
-                is IOException -> {
-                    // Get from db
-                    roomRepository.getLocalRooms()
-                        .map { roomsList ->
-                            RoomListContainer(
-                                roomsList,
-                                // Rethrow error if cached list is empty
-                                if (roomsList.isEmpty()) error else null,
-                                isDataOld = true
-                            )
-                        }
-                        // Trigger a container in case of error, else the error will not be catched by
-                        // livedata reactive streams
-                        .onErrorResumeNext { Single.just(RoomListContainer(null, error, false)) }
+                Log.d(GetRoomsListUseCase::class.simpleName, "rooms list load failed")
+                when (error) {
+                    // If no internet, get from local database
+                    is IOException -> {
+                        // Get from db
+                        roomRepository.getLocalRooms()
+                            .map { roomsList ->
+                                if (roomsList.isEmpty()) {
+                                    RoomListContainer(
+                                        null,
+                                        // Rethrow error if cached list is empty
+                                        error,
+                                        isDataOld = false
+                                    )
+                                } else {
+                                    RoomListContainer(
+                                        roomsList,
+                                        null,
+                                        isDataOld = true
+                                    )
+                                }
+                            }
+                            // Trigger a container in case of error, else the error will not be catched by
+                            // livedata reactive streams
+                            .onErrorResumeNext {
+                                Single.just(
+                                    RoomListContainer(
+                                        null,
+                                        error,
+                                        false
+                                    )
+                                )
+                            }
+                    }
+                    // Trigger a container in case of error, else the error will not be catched by livedata
+                    // reactive streams
+                    else -> Single.just(RoomListContainer(null, error, false))
                 }
-                // Trigger a container in case of error, else the error will not be catched by livedata
-                // reactive streams
-                else -> Single.just(RoomListContainer(null, error, false))
             }
-        }
     }
 }

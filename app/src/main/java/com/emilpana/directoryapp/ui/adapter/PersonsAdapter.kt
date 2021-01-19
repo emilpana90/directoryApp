@@ -17,6 +17,8 @@ import com.emilpana.directoryapp.domain.entity.model.Person
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
+typealias ItemClickListener = (Person) -> Unit
+
 class PersonsAdapter @Inject constructor(@ActivityContext val context: Context) :
     RecyclerView.Adapter<PersonsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,6 +33,8 @@ class PersonsAdapter @Inject constructor(@ActivityContext val context: Context) 
             jobTitleTextView = view.findViewById(R.id.jobTitle)
         }
     }
+
+    var itemClickListener: ItemClickListener? = null
 
     private val personsList = ArrayList<Person>()
 
@@ -49,6 +53,7 @@ class PersonsAdapter @Inject constructor(@ActivityContext val context: Context) 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val personData = personsList[position]
+        holder.itemView.setOnClickListener { itemClickListener?.let { it.invoke(personData) } }
 
         Glide.with(context)
             .load(personData.avatar)

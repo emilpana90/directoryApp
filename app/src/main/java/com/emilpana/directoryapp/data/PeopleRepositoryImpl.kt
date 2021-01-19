@@ -30,4 +30,11 @@ class PeopleRepositoryImpl @Inject constructor(val database: Database, val apiSe
         database.personDao().deleteAllPersons()
         database.personDao().insertAll(persons.map { it.toLocalPerson() })
     }
+
+    override fun getLocalPerson(personId: String): Single<Person> =
+        Single.create { emitter ->
+            emitter.onSuccess(
+                database.personDao().getPersonById(personId).fromLocalPerson()
+            )
+        }
 }

@@ -8,5 +8,5 @@
     <string name="error_no_internet_subtitle">Please check your internet connection and try again</string>
     <string name="error_generic_title">An error has occurred</string>
     <string name="error_generic_subtitle">Please check your connection or contact support</string>
-    <string name="error_old_data">This is older data due to no connection.\n Please swipe to refresh.</string>
+    <string name="error_old_data">This is older data due to connection issues.\n Please swipe to refresh.</string>
 </resources>

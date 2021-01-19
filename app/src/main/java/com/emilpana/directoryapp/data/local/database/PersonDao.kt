@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.emilpana.directoryapp.data.local.entity.LocalPerson
-import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface PersonDao {
@@ -16,4 +15,7 @@ interface PersonDao {
 
     @Query("DELETE FROM persons")
     fun deleteAllPersons()
+
+    @Query("SELECT * FROM persons WHERE id == :personId")
+    fun getPersonById(personId: String): LocalPerson
 }

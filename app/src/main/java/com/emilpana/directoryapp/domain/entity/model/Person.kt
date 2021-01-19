@@ -10,6 +10,11 @@ data class PersonsListContainer(
     val isDataOld: Boolean
 )
 
+data class PersonContainer(
+    val person: Person?,
+    val error: Throwable? = null
+)
+
 data class Person(
     val avatar: String,
     val createdAt: String,

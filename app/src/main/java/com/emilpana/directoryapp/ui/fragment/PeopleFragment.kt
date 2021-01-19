@@ -63,7 +63,6 @@ class PeopleFragment : Fragment() {
         // Set up navigation and toolbar
         val navController = findNavController()
         binding.toolbar.setupWithNavController(navController)
-        binding.toolbar.setTitle(R.string.people_title)
 
         // Set up recycler view
         binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
@@ -74,6 +73,13 @@ class PeopleFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
+        adapter.itemClickListener = {
+            navController.navigate(
+                PeopleFragmentDirections.actionPeopleFragmentToContactDetailsFragment(
+                    it.id, getString(R.string.person_name, it.firstName, it.lastName)
+                )
+            )
+        }
         binding.recyclerView.adapter = adapter
 
         binding.progressBar.isVisible = true
@@ -81,34 +87,37 @@ class PeopleFragment : Fragment() {
         binding.recyclerView.isVisible = true
 
         val viewModel: PeopleViewModel by viewModels()
-        viewModel.peopleList.observe(viewLifecycleOwner, Observer { (personsList, error, isDataOld) ->
-            binding.progressBar.isVisible = false
-            binding.swipeRefresh.isRefreshing = false
-            binding.oldDataBanner.root.isVisible = isDataOld
+        viewModel.peopleList.observe(
+            viewLifecycleOwner,
+            Observer { (personsList, error, isDataOld) ->
+                binding.progressBar.isVisible = false
+                binding.swipeRefresh.isRefreshing = false
+                binding.oldDataBanner.root.isVisible =
+                    isDataOld// && !binding.contentPlaceholder.root.isVisible
 
-            if (error == null) {
-                // Hide the error
-                binding.contentPlaceholder.root.isVisible = false
-                binding.recyclerView.isVisible = true
+                if (error == null) {
+                    // Hide the error
+                    binding.contentPlaceholder.root.isVisible = false
+                    binding.recyclerView.isVisible = true
 
-                // Update the list
-                adapter.setData(personsList)
-            } else {
-                // Handle the error
-                binding.contentPlaceholder.root.isVisible = true
-                binding.recyclerView.isVisible = false
-                when (error) {
-                    is IOException -> {
-                        binding.contentPlaceholder.title.setText(R.string.error_no_internet_title)
-                        binding.contentPlaceholder.subtitle.setText(R.string.error_no_internet_subtitle)
-                    }
-                    else -> {
-                        binding.contentPlaceholder.title.setText(R.string.error_generic_title)
-                        binding.contentPlaceholder.subtitle.setText(R.string.error_generic_subtitle)
+                    // Update the list
+                    adapter.setData(personsList)
+                } else {
+                    // Handle the error
+                    binding.contentPlaceholder.root.isVisible = true
+                    binding.recyclerView.isVisible = false
+                    when (error) {
+                        is IOException -> {
+                            binding.contentPlaceholder.title.setText(R.string.error_no_internet_title)
+                            binding.contentPlaceholder.subtitle.setText(R.string.error_no_internet_subtitle)
+                        }
+                        else -> {
+                            binding.contentPlaceholder.title.setText(R.string.error_generic_title)
+                            binding.contentPlaceholder.subtitle.setText(R.string.error_generic_subtitle)
+                        }
                     }
                 }
-            }
-        })
+            })
         viewModel.refreshData()
 
         binding.swipeRefresh.setOnRefreshListener {

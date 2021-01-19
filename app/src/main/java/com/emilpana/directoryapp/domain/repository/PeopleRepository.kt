@@ -13,4 +13,6 @@ interface PeopleRepository {
     fun getLocalPeople(): Single<List<Person>>
 
     fun replaceLocalPeople(persons: List<Person>)
+
+    fun getLocalPerson(personId: String): Single<Person>
 }

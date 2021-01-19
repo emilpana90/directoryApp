@@ -16,35 +16,51 @@ class GetPeopleListUseCase @Inject constructor(val peopleRepository: PeopleRepos
     fun execute(): Single<PersonsListContainer> {
         return peopleRepository.getRemotePeople()
             .map { PersonsListContainer(it, isDataOld = false) }.doOnSuccess {
-            // Save to db
-            it.peopleList?.let {
-                peopleRepository.replaceLocalPeople(it)
-            }
-
-            Log.d(PeopleRepositoryImpl::class.simpleName, "personsList loaded")
-        }.onErrorResumeNext { error ->
-            Log.d(PeopleRepositoryImpl::class.simpleName, "personsList load failed")
-            when (error) {
-                // If no internet, get from local database
-                is IOException -> {
-                    // Get from db
-                    peopleRepository.getLocalPeople()
-                        .map { peopleList ->
-                            PersonsListContainer(
-                                peopleList,
-                                // Rethrow error if cached list is empty
-                                if (peopleList.isEmpty()) error else null,
-                                isDataOld = true
-                            )
-                        }
-                        // Trigger a container for error, else the error will not be catched by
-                        // livedata reactive streams
-                        .onErrorResumeNext { Single.just(PersonsListContainer(null, error, false)) }
+                // Save to db
+                it.peopleList?.let {
+                    peopleRepository.replaceLocalPeople(it)
                 }
-                // Trigger a container for error, else the error will not be catched by livedata
-                // reactive streams
-                else -> Single.just(PersonsListContainer(null, error, false))
+
+                Log.d(PeopleRepositoryImpl::class.simpleName, "personsList loaded")
+            }.onErrorResumeNext { error ->
+                Log.d(PeopleRepositoryImpl::class.simpleName, "personsList load failed")
+                when (error) {
+                    // If no internet, get from local database
+                    is IOException -> {
+                        // Get from db
+                        peopleRepository.getLocalPeople()
+                            .map { peopleList ->
+                                if (peopleList.isEmpty()) {
+                                    PersonsListContainer(
+                                        null,
+                                        // Rethrow error if cached list is empty
+                                        error,
+                                        isDataOld = false
+                                    )
+                                } else {
+                                    PersonsListContainer(
+                                        peopleList,
+                                        null,
+                                        isDataOld = true
+                                    )
+                                }
+                            }
+                            // Trigger a container for error, else the error will not be catched by
+                            // livedata reactive streams
+                            .onErrorResumeNext {
+                                Single.just(
+                                    PersonsListContainer(
+                                        null,
+                                        error,
+                                        false
+                                    )
+                                )
+                            }
+                    }
+                    // Trigger a container for error, else the error will not be catched by livedata
+                    // reactive streams
+                    else -> Single.just(PersonsListContainer(null, error, false))
+                }
             }
-        }
     }
 }

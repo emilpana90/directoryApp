@@ -1,5 +1,9 @@
 package com.emilpana.directoryapp.ui.fragment
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +19,7 @@ import com.emilpana.directoryapp.R
 import com.emilpana.directoryapp.databinding.FragmentContactDetailsBinding
 import com.emilpana.directoryapp.presentation.people.ContactDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.IOException
+
 
 @AndroidEntryPoint
 class ContactDetailsFragment : Fragment() {
@@ -54,13 +58,39 @@ class ContactDetailsFragment : Fragment() {
                     // Load avatar image
                     Glide.with(view.context)
                         .load(person.avatar)
-//                      .placeholder(R.drawable.placeholder) TODO
+                        .placeholder(R.drawable.ic_person)
                         .into(binding.avatar)
 
                     binding.name.text =
                         getString(R.string.person_name, person.firstName, person.lastName)
 
+                    // Setting the person's favorite color
+                    personData.favouriteColor?.let {
+                        // Reduce the intensity of the color before setting as background
+                        binding.colorBar.setBackgroundColor(
+                            Color.parseColor(
+                                it.replace(
+                                    "#",
+                                    "#C0"
+                                )
+                            )
+                        )
+                    }
+
                     binding.jobTitle.text = person.jobTitle
+                    binding.email.text = person.email
+                    binding.phone.text = person.phone
+                    binding.location.setOnClickListener {
+                        val uri =
+                            Uri.parse("geo:${person.latitude},${person.longitude}?q=${person.latitude},${person.longitude}")
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        val chooser = Intent.createChooser(intent, "")
+                        try {
+                            startActivity(chooser)
+                        } catch (e: ActivityNotFoundException) {
+                            // No activity found to open maps with
+                        }
+                    }
                 }
             } else {
                 // Handle the error

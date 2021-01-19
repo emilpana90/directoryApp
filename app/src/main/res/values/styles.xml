@@ -5,6 +5,16 @@
         <item name="fontFamily">sans-serif</item>
     </style>
 
+    <style name="HeaderTextStyle" parent="TextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/gray1</item>
+    </style>
+
+    <style name="CategoryTextStyle" parent="TextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
     <style name="ErrorTitle" parent="TextStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black</item>

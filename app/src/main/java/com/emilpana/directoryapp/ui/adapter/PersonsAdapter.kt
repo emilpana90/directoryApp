@@ -1,10 +1,7 @@
-/*
- * Game of Pods - Copyright (c) Cognizant Softvision 2020.
- * All rights reserved.
- */
 package com.emilpana.directoryapp.ui.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +22,14 @@ class PersonsAdapter @Inject constructor(@ActivityContext val context: Context) 
         val avatarImageView: ImageView
         val nameTextView: TextView
         val jobTitleTextView: TextView
+        val colorBar: View
 
         init {
             // View references
             avatarImageView = view.findViewById(R.id.avatar)
             nameTextView = view.findViewById(R.id.name)
             jobTitleTextView = view.findViewById(R.id.jobTitle)
+            colorBar = view.findViewById(R.id.colorBar)
         }
     }
 
@@ -57,11 +56,15 @@ class PersonsAdapter @Inject constructor(@ActivityContext val context: Context) 
 
         Glide.with(context)
             .load(personData.avatar)
-//            .placeholder(R.drawable.placeholder) TODO
+            .placeholder(R.drawable.ic_person)
             .into(holder.avatarImageView)
 
         holder.nameTextView.text =
             context.getString(R.string.person_name, personData.firstName, personData.lastName)
+        personData.favouriteColor?.let {
+            // Reduce the intensity of the color before setting as background
+            holder.colorBar.setBackgroundColor(Color.parseColor(it.replace("#", "#C0")))
+        }
         holder.jobTitleTextView.text = personData.jobTitle ?: ""
     }
 

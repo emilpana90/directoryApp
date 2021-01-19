@@ -4,4 +4,8 @@
     <string name="room_title">Rooms list</string>
     <string name="person_name">%1$s %2$s</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="error_no_internet_title">No internet</string>
+    <string name="error_no_internet_subtitle">Please check your internet connection and try again</string>
+    <string name="error_generic_title">An error has occurred</string>
+    <string name="error_generic_subtitle">Please check your connection or contact support</string>
 </resources>

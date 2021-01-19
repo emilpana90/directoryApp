@@ -6,9 +6,9 @@ package com.emilpana.directoryapp.domain.entity.model
 
 data class RoomListContainer(val roomList: List<Room>?, val error: Throwable? = null)
 data class Room(
-    val created_at: String,
+    val createdAt: String,
     val id: String,
-    val is_occupied: Boolean,
-    val max_occupancy: Int,
+    val isOccupied: Boolean,
+    val maxOccupancy: Int,
     val name: String
 )

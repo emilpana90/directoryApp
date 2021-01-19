@@ -3,4 +3,12 @@
     <style name="TextStyle">
         <item name="fontFamily">sans-serif</item>
     </style>
+    <style name="ErrorTitle" parent="TextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="ErrorSubtitle" parent="TextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

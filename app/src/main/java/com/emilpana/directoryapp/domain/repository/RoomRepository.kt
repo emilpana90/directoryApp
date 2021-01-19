@@ -8,5 +8,9 @@ import com.emilpana.directoryapp.domain.entity.model.Room
 import io.reactivex.rxjava3.core.Single
 
 interface RoomRepository {
-    fun getAllRooms(): Single<List<Room>>
+    fun getRemoteRooms(): Single<List<Room>>
+
+    fun getLocalRooms(): Single<List<Room>>
+
+    fun replaceLocalRooms(persons: List<Room>)
 }

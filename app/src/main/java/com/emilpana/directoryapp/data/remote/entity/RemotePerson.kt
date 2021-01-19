@@ -1,16 +1,16 @@
-package com.emilpana.directoryapp.data.local.entity
+/*
+ * Game of Pods - Copyright (c) Cognizant Softvision 2020.
+ * All rights reserved.
+ */
+package com.emilpana.directoryapp.data.remote.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "persons")
-data class LocalPerson(
+data class RemotePerson(
     val avatar: String,
     val createdAt: String,
     val email: String,
     val favouriteColor: String,
     val firstName: String,
-    @PrimaryKey val id: String,
+    val id: String,
     val jobTitle: String,
     val lastName: String,
     val latitude: Double,

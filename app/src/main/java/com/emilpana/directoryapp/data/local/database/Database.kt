@@ -1,10 +1,16 @@
-/*
- * Game of Pods - Copyright (c) Cognizant Softvision 2020.
- * All rights reserved.
- */
-package com.emilpana.directoryapp.data.local
+package com.emilpana.directoryapp.data.local.database
 
-import javax.inject.Inject
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.emilpana.directoryapp.data.local.entity.LocalPerson
+import com.emilpana.directoryapp.data.local.entity.LocalRoom
 
-class Database @Inject constructor() {
+@Database(
+    entities = arrayOf(LocalPerson::class, LocalRoom::class),
+    version = 1,
+    exportSchema = false
+)
+abstract class Database : RoomDatabase() {
+    abstract fun personDao(): PersonDao
+    abstract fun roomDao(): RoomDao
 }

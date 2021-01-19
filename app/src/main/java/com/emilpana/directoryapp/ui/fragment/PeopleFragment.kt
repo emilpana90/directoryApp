@@ -15,6 +15,7 @@ import com.emilpana.directoryapp.databinding.FragmentPeopleBinding
 import com.emilpana.directoryapp.presentation.people.PeopleViewModel
 import com.emilpana.directoryapp.ui.adapter.PersonsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -76,17 +77,34 @@ class PeopleFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.progressBar.isVisible = true
+        binding.contentPlaceholder.root.isVisible = false
+        binding.recyclerView.isVisible = true
 
         val viewModel: PeopleViewModel by viewModels()
         viewModel.peopleList.observe(viewLifecycleOwner, Observer { (personsList, error) ->
             binding.progressBar.isVisible = false
             binding.swipeRefresh.isRefreshing = false
             if (error == null) {
+                // Hide the error
+                binding.contentPlaceholder.root.isVisible = false
+                binding.recyclerView.isVisible = true
+
                 // Update the list
                 adapter.setData(personsList)
             } else {
-                // Handle the error TODO
-
+                // Handle the error
+                binding.contentPlaceholder.root.isVisible = true
+                binding.recyclerView.isVisible = false
+                when (error) {
+                    is IOException -> {
+                        binding.contentPlaceholder.title.setText(R.string.error_no_internet_title)
+                        binding.contentPlaceholder.subtitle.setText(R.string.error_no_internet_subtitle)
+                    }
+                    else -> {
+                        binding.contentPlaceholder.title.setText(R.string.error_generic_title)
+                        binding.contentPlaceholder.subtitle.setText(R.string.error_generic_subtitle)
+                    }
+                }
             }
         })
         viewModel.refreshData()

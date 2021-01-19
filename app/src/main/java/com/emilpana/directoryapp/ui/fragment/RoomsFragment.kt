@@ -15,6 +15,7 @@ import com.emilpana.directoryapp.databinding.FragmentRoomsBinding
 import com.emilpana.directoryapp.presentation.room.RoomsViewModel
 import com.emilpana.directoryapp.ui.adapter.RoomsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -73,17 +74,34 @@ class RoomsFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.progressBar.isVisible = true
+        binding.contentPlaceholder.root.isVisible = false
+        binding.recyclerView.isVisible = true
 
         val viewModel: RoomsViewModel by viewModels()
         viewModel.roomList.observe(viewLifecycleOwner, Observer { (roomList, error) ->
             binding.progressBar.isVisible = false
             binding.swipeRefresh.isRefreshing = false
             if (error == null) {
+                // Hide the error & show recycler view
+                binding.contentPlaceholder.root.isVisible = false
+                binding.recyclerView.isVisible = true
+
                 // Update the list
                 adapter.setData(roomList)
             } else {
                 // Handle the error
-
+                binding.contentPlaceholder.root.isVisible = true
+                binding.recyclerView.isVisible = false
+                when (error) {
+                    is IOException -> {
+                        binding.contentPlaceholder.title.setText(R.string.error_no_internet_title)
+                        binding.contentPlaceholder.subtitle.setText(R.string.error_no_internet_subtitle)
+                    }
+                    else -> {
+                        binding.contentPlaceholder.title.setText(R.string.error_generic_title)
+                        binding.contentPlaceholder.subtitle.setText(R.string.error_generic_subtitle)
+                    }
+                }
             }
         })
         viewModel.refreshData()
@@ -91,5 +109,11 @@ class RoomsFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refreshData()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 }

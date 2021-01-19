@@ -5,22 +5,30 @@
 package com.emilpana.directoryapp.presentation.room
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.ViewModel
-import com.emilpana.directoryapp.domain.entity.model.Room
-import com.emilpana.directoryapp.domain.room.RoomRepository
+import androidx.lifecycle.*
+import com.emilpana.directoryapp.domain.business.GetRoomsListUseCase
+import com.emilpana.directoryapp.domain.entity.model.RoomListContainer
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class RoomsViewModel @ViewModelInject constructor(private val roomRepository: RoomRepository) :
+class RoomsViewModel @ViewModelInject constructor(private val getRoomsListUseCase: GetRoomsListUseCase) :
     ViewModel() {
-    val roomList: LiveData<List<Room>> by lazy {
+    private val refreshLiveDataTrigger = MutableLiveData<Unit>()
+
+    val roomList: LiveData<RoomListContainer> = refreshLiveDataTrigger.switchMap {
+        loadRoomsList()
+    }
+
+    private fun loadRoomsList(): LiveData<RoomListContainer> {
         val flowable = Flowable
-            .fromSingle(roomRepository.getAllRooms())
+            .fromSingle(getRoomsListUseCase.execute())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-        LiveDataReactiveStreams.fromPublisher(flowable)
+        return LiveDataReactiveStreams.fromPublisher(flowable)
+    }
+
+    fun refreshData() {
+        refreshLiveDataTrigger.value = Unit
     }
 }

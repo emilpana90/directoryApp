@@ -5,23 +5,30 @@
 package com.emilpana.directoryapp.presentation.people
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.ViewModel
-import com.emilpana.directoryapp.domain.entity.model.Person
+import androidx.lifecycle.*
+import com.emilpana.directoryapp.domain.business.GetPeopleListUseCase
 import com.emilpana.directoryapp.domain.entity.model.PersonsListContainer
-import com.emilpana.directoryapp.domain.people.PeopleRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class PeopleViewModel @ViewModelInject constructor(private val peopleRepository: PeopleRepository) :
+class PeopleViewModel @ViewModelInject constructor(private val getPeopleListUseCase: GetPeopleListUseCase) :
     ViewModel() {
-    val peopleList: LiveData<PersonsListContainer> by lazy {
+    private val refreshLiveDataTrigger = MutableLiveData<Unit>()
+
+    val peopleList: LiveData<PersonsListContainer> = refreshLiveDataTrigger.switchMap {
+        loadPeopleList()
+    }
+
+    private fun loadPeopleList(): LiveData<PersonsListContainer> {
         val flowable = Flowable
-            .fromSingle(peopleRepository.getAllPeople())
+            .fromSingle(getPeopleListUseCase.execute())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-        LiveDataReactiveStreams.fromPublisher(flowable)
+        return LiveDataReactiveStreams.fromPublisher(flowable)
+    }
+
+    fun refreshData() {
+        refreshLiveDataTrigger.value = Unit
     }
 }

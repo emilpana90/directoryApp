@@ -1,5 +1,6 @@
 package com.emilpana.directoryapp.di.module
 
+import com.emilpana.directoryapp.BuildConfig
 import com.emilpana.directoryapp.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object ApiServiceModule {
             .addInterceptor(loggingInterceptor)
             .build()
         return Retrofit.Builder()
-            .baseUrl("https://5f7c2c8400bd74001690a583.mockapi.io/api/v1/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())

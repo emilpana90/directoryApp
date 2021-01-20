@@ -1,6 +1,9 @@
 package com.emilpana.directoryapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.emilpana.directoryapp.data.PeopleRepositoryImpl
 import com.emilpana.directoryapp.domain.business.GetPeopleListUseCase
@@ -12,11 +15,15 @@ import com.emilpana.directoryapp.mock.mock
 import com.emilpana.directoryapp.presentation.SchedulerProvider
 import com.emilpana.directoryapp.presentation.people.PeopleViewModel
 import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.processors.ReplayProcessor
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import java.util.concurrent.TimeUnit
+
 
 class PeopleViewModelTest {
 
@@ -28,14 +35,15 @@ class PeopleViewModelTest {
     fun `given PeopleViewModel, when , then `() {
         val peopleRepository = PeopleRepositoryImpl(MockDatabase, MockApiService)
         val useCase = GetPeopleListUseCase(peopleRepository)
+        val trampoline = Schedulers.trampoline()
         val peopleViewModel = PeopleViewModel(useCase, object : SchedulerProvider {
-            override fun getIOScheduler(): Scheduler = TestScheduler()
+            override fun getIOScheduler(): Scheduler = trampoline
 
-            override fun getMainScheduler(): Scheduler = TestScheduler()
+            override fun getMainScheduler(): Scheduler = trampoline
         })
 
         val dataObserver = mock<Observer<PersonsListContainer>>()
-        peopleViewModel.peopleList.observeForever(dataObserver)
+        peopleViewModel.peopleList.observeForever(dataObserver);
 
         peopleViewModel.refreshData()
 

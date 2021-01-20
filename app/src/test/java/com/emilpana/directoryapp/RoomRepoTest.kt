@@ -1,7 +1,3 @@
-/*
- * Game of Pods - Copyright (c) Cognizant Softvision 2020.
- * All rights reserved.
- */
 package com.emilpana.directoryapp
 
 import assertk.assertThat
@@ -13,10 +9,6 @@ import com.emilpana.directoryapp.mock.MockDatabase
 import org.junit.Test
 
 class RoomRepoTest {
-    @Test
-    fun `given , when , then `() {
-
-    }
 
     @Test
     fun `given RoomRepository, when getRemoteRooms() is called, then the correct rooms list is retrieved`() {

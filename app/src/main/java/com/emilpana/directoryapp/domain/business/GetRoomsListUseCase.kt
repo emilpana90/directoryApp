@@ -1,6 +1,5 @@
 package com.emilpana.directoryapp.domain.business
 
-import android.util.Log
 import com.emilpana.directoryapp.domain.entity.model.RoomListContainer
 import com.emilpana.directoryapp.domain.repository.RoomRepository
 import io.reactivex.rxjava3.core.Single
@@ -15,10 +14,7 @@ class GetRoomsListUseCase @Inject constructor(private val roomRepository: RoomRe
                 it.roomList?.let {
                     roomRepository.replaceLocalRooms(it)
                 }
-
-                Log.d(GetRoomsListUseCase::class.simpleName, "rooms list loaded")
             }.onErrorResumeNext { error ->
-                Log.d(GetRoomsListUseCase::class.simpleName, "rooms list load failed")
                 when (error) {
                     // If no internet, get from local database
                     is IOException -> {

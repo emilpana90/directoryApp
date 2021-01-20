@@ -4,13 +4,15 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.emilpana.directoryapp.domain.business.GetPeopleListUseCase
 import com.emilpana.directoryapp.domain.entity.model.PersonsListContainer
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import com.emilpana.directoryapp.presentation.SchedulerProvider
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
-class PeopleViewModel @ViewModelInject constructor(private val getPeopleListUseCase: GetPeopleListUseCase) :
+class PeopleViewModel @ViewModelInject constructor(
+    private val getPeopleListUseCase: GetPeopleListUseCase,
+    private val schedulerProvider: SchedulerProvider
+) :
     ViewModel() {
-    private val refreshLiveDataTrigger = MutableLiveData<Unit>()
+    val refreshLiveDataTrigger = MutableLiveData<Unit>()
 
     val peopleList: LiveData<PersonsListContainer> = refreshLiveDataTrigger.switchMap {
         loadPeopleList()
@@ -19,8 +21,8 @@ class PeopleViewModel @ViewModelInject constructor(private val getPeopleListUseC
     private fun loadPeopleList(): LiveData<PersonsListContainer> {
         val flowable = Flowable
             .fromSingle(getPeopleListUseCase.execute())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(schedulerProvider.getIOScheduler())
+            .observeOn(schedulerProvider.getMainScheduler())
         return LiveDataReactiveStreams.fromPublisher(flowable)
     }
 

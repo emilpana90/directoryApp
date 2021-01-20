@@ -11,10 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-/*
- * Game of Pods - Copyright (c) Cognizant Softvision 2020.
- * All rights reserved.
- */
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 object ApiServiceModule {

@@ -9,10 +9,6 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 
-/*
- * Game of Pods - Copyright (c) Cognizant Softvision 2020.
- * All rights reserved.
- */
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 abstract class RepositoryModule {

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emilpana.directoryapp.R
 import com.emilpana.directoryapp.databinding.FragmentRoomsBinding
@@ -63,7 +64,8 @@ class RoomsFragment : Fragment() {
         binding.toolbar.setupWithNavController(navController)
 
         // Set up recycler view
-        binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerView.layoutManager =
+            GridLayoutManager(view.context, resources.getInteger(R.integer.columns))
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
             DividerItemDecoration(

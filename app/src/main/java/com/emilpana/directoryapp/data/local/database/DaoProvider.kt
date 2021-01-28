@@ -1,6 +1,6 @@
 package com.emilpana.directoryapp.data.local.database
 
-interface DatabaseProvider {
+interface DaoProvider {
     fun personDao(): PersonDao
     fun roomDao(): RoomDao
 }

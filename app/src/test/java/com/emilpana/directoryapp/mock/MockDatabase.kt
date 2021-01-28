@@ -1,12 +1,12 @@
 package com.emilpana.directoryapp.mock
 
-import com.emilpana.directoryapp.data.local.database.DatabaseProvider
+import com.emilpana.directoryapp.data.local.database.DaoProvider
 import com.emilpana.directoryapp.data.local.database.PersonDao
 import com.emilpana.directoryapp.data.local.database.RoomDao
 import com.emilpana.directoryapp.data.local.entity.LocalPerson
 import com.emilpana.directoryapp.data.local.entity.LocalRoom
 
-object MockDatabase : DatabaseProvider {
+object MockDatabase : DaoProvider {
     override fun personDao(): PersonDao {
         return object : PersonDao {
             override fun getAllPersons(): List<LocalPerson> {

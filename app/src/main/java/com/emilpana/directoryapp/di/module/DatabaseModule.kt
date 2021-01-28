@@ -3,8 +3,7 @@ package com.emilpana.directoryapp.di.module
 import android.content.Context
 import androidx.room.Room
 import com.emilpana.directoryapp.data.local.database.Database
-import com.emilpana.directoryapp.data.local.database.DatabaseProvider
-import com.emilpana.directoryapp.data.local.database.DatabaseProviderImpl
+import com.emilpana.directoryapp.data.local.database.DaoProvider
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,7 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @InstallIn(ActivityRetainedComponent::class)
 abstract class DatabaseModule {
     @Binds
-    abstract fun provideDatabaseProvider(databaseProviderImpl: DatabaseProviderImpl): DatabaseProvider
+    abstract fun provideDatabaseProvider(database: Database): DaoProvider
 }
 
 @Module

@@ -10,7 +10,7 @@ import com.emilpana.directoryapp.data.local.entity.LocalRoom
     version = 1,
     exportSchema = false
 )
-abstract class Database : RoomDatabase() {
-    abstract fun personDao(): PersonDao
-    abstract fun roomDao(): RoomDao
+abstract class Database : RoomDatabase(), DaoProvider {
+     abstract override fun personDao(): PersonDao
+    abstract override fun roomDao(): RoomDao
 }

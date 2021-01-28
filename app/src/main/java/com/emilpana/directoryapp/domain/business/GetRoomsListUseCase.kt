@@ -9,11 +9,11 @@ import javax.inject.Inject
 class GetRoomsListUseCase @Inject constructor(private val roomRepository: RoomRepository) {
     fun execute(): Single<RoomListContainer> {
         return roomRepository.getRemoteRooms().map { RoomListContainer(it, isDataOld = false) }
-            .doOnSuccess {
+            .flatMap {
                 // Save to db
-                it.roomList?.let {
-                    roomRepository.replaceLocalRooms(it)
-                }
+                roomRepository
+                    .replaceLocalRooms(it.roomList ?: listOf())
+                    .toSingleDefault(it)
             }.onErrorResumeNext { error ->
                 when (error) {
                     // If no internet, get from local database

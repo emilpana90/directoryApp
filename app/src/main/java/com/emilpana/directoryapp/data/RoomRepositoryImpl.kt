@@ -7,6 +7,7 @@ import com.emilpana.directoryapp.data.remote.ApiService
 import com.emilpana.directoryapp.data.remote.mapper.fromRemoteRoom
 import com.emilpana.directoryapp.domain.entity.model.Room
 import com.emilpana.directoryapp.domain.repository.RoomRepository
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -20,13 +21,15 @@ class RoomRepositoryImpl @Inject constructor(
     }
 
     override fun getLocalRooms(): Single<List<Room>> =
-        Single.create { emitter ->
-            emitter.onSuccess(
-                daoProvider.roomDao().getAllRooms().map { it.fromLocalRoom() })
-        }
+        daoProvider.roomDao().getAllRooms()
+            .map { roomsList ->
+                roomsList.map { room ->
+                    room.fromLocalRoom()
+                }
+            }
 
-    override fun replaceLocalRooms(rooms: List<Room>) {
-        daoProvider.roomDao().deleteAllRooms()
-        daoProvider.roomDao().insertAll(rooms.map { it.toLocalRoom() })
-    }
+    override fun replaceLocalRooms(rooms: List<Room>): Completable =
+        daoProvider.roomDao().deleteAllRooms().andThen(
+            daoProvider.roomDao().insertAll(rooms.map { it.toLocalRoom() })
+        )
 }

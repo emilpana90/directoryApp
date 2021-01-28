@@ -9,13 +9,20 @@ import javax.inject.Inject
 class GetPeopleListUseCase @Inject constructor(val peopleRepository: PeopleRepository) {
     fun execute(): Single<PersonsListContainer> {
         return peopleRepository.getRemotePeople()
-            .map { PersonsListContainer(it, isDataOld = false) }.doOnSuccess {
+            .map { PersonsListContainer(it, isDataOld = false) }.flatMap { personsListContainer ->
                 // Save to db
-                it.peopleList?.let {
-                    peopleRepository.replaceLocalPeople(it)
-                }
-
-            }.onErrorResumeNext { error ->
+                personsListContainer.peopleList?.let { personsList ->
+                    peopleRepository.replaceLocalPeople(personsList)
+                        .toSingleDefault(personsListContainer)
+                } ?: // Return empty list, if people list is empty from API
+                Single.just(
+                    PersonsListContainer(
+                        peopleList = listOf(),
+                        isDataOld = false
+                    )
+                )
+            } // In case the API fails, try to handle depending on error type
+            .onErrorResumeNext { error ->
                 when (error) {
                     // If no internet, get from local database
                     is IOException -> {

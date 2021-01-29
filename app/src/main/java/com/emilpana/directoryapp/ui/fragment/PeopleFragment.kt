@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.emilpana.directoryapp.R
 import com.emilpana.directoryapp.databinding.FragmentPeopleBinding
 import com.emilpana.directoryapp.presentation.people.PeopleViewModel
@@ -84,7 +83,7 @@ class PeopleFragment : Fragment() {
         }
         binding.recyclerView.adapter = adapter
 
-        binding.progressBar.isVisible = true
+        binding.peopleProgressBar.isVisible = true
         binding.contentPlaceholder.root.isVisible = false
         binding.recyclerView.isVisible = true
 
@@ -92,7 +91,7 @@ class PeopleFragment : Fragment() {
         viewModel.peopleList.observe(
             viewLifecycleOwner,
             Observer { (personsList, error, isDataOld) ->
-                binding.progressBar.isVisible = false
+                binding.peopleProgressBar.isVisible = false
                 binding.swipeRefresh.isRefreshing = false
                 binding.oldDataBanner.root.isVisible =
                     isDataOld// && !binding.contentPlaceholder.root.isVisible

@@ -12,6 +12,9 @@ class PeopleViewModel @ViewModelInject constructor(
     private val schedulerProvider: SchedulerProvider
 ) :
     ViewModel() {
+
+    var selectedItemId: String? = null
+
     val refreshLiveDataTrigger = MutableLiveData<Unit>()
 
     val peopleList: LiveData<PersonsListContainer> = refreshLiveDataTrigger.switchMap {

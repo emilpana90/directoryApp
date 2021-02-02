@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -33,6 +34,19 @@ class ContactDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentContactDetailsBinding.inflate(inflater, container, false)
+
+        // Check if need to close this screen, as it will be shown as details beside people fragment
+        val showContactDetails = resources.getBoolean(R.bool.showDetails)
+        val blockHide = arguments?.getBoolean("blockHide") ?: false
+        if (showContactDetails && !blockHide) {
+            findNavController().popBackStack()
+        }
+
+        // If show embedded with the list fragment, we'll close the toolbar todo Refactor: move code, rename, etc
+        if (blockHide) {
+            binding.toolbar.visibility = GONE
+        }
+
         return binding.root
     }
 
@@ -105,6 +119,8 @@ class ContactDetailsFragment : Fragment() {
                 }
             }
         })
-        viewModel.setPersonId(args.personId)
+        arguments?.getString("personId")?.let {
+            viewModel.setPersonId(it)
+        }
     }
 }

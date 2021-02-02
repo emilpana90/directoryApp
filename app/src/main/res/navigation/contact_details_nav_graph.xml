@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contact_details_nav_graph"
+    app:startDestination="@id/emptyFragment">
+
+    <fragment
+        android:id="@+id/contactDetailsFragment2"
+        android:name="com.emilpana.directoryapp.ui.fragment.ContactDetailsFragment"
+        tools:layout="@layout/fragment_contact_details" />
+
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="com.emilpana.directoryapp.ui.fragment.EmptyFragment" />
+</navigation>
